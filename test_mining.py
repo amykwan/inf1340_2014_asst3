@@ -1,8 +1,6 @@
-#!/usr/bin/env python3
-
 """ Docstring """
 
-__author__ = 'Susan Sim'
+__author__ = 'Eugene Kang, Amy Kwan, Jessica Mann, Susan Sim'
 __email__ = "ses@drsusansim.org"
 
 __copyright__ = "2014 Susan Sim"
