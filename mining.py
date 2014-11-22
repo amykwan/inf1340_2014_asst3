@@ -14,57 +14,67 @@ import datetime
 import unicodedata
 stock_data = []
 monthly_averages = []
+current_stock = ""
 
-#initializer
+
 def read_stock_data(stock_name, stock_file_name):
+    """
 
+    :param stock_name:
+    :param stock_file_name:
+    :return:
+    """
 
+    """
+        IMO there's no need for a helper function. Just use read stock data.
+        Of note: I changed the names of the variables so its more
+        english-readable. I was having difficulty parsing the different variables
+        when they were all some variation of the word "month".
+        Overall the code you wrote for the processing of the data was really good!
+        It looks like I changed it but really its just formatting, minor tweaks,
+        and making the variable names more differentiated. - Eugene
+    """
+    # Decode the JSON file to object
+    stock_info = read_json_from_file(stock_file_name)
 
-    monthly_averages = []
-    #Read the data from the json file
-    all_info = read_json_from_file(stock_file_name)
+    # Initialize variables, list, dict
+    # In format YYYY-MM
+    timestamp = ""
 
-    #Extend the result into the empty list.
-    stock_price_process(all_info)
-
-
-#Helper function which use to get all the monthly average of the stock
-def stock_price_process(stock_history):
-
-    #Initialize the variable, list and dictionaries
-    result = []
-    #Use to store the sum of volume*close price of each day
-    monthly_volume_times_close = {}
-    #Use to store the sum of volumes
+    # List of dates [YYYY-MM] that have stock volume and total sales information
+    unique_date_list = []
     monthly_volume = {}
-    month = ""
+    monthly_sales = {}
 
-    month_in_order = []
+    # Loop: gathers all the information from ever entry in stock_info
+    # creates 2 dict with a key-value pair of [timestamp][value]
+    for entry in stock_info:
+        # Take month and year from date in format "YYYY-MM"
+        timestamp = entry["Date"][0:7]
+        if timestamp not in unique_date_list:
+            unique_date_list.append(timestamp)
 
-    #Loop over all the dictionaries in the json file
-    for day_history in stock_history:
-        #Take the month and year from the date
-        month = day_history["Date"][0:7]
-        if month not in month_in_order:
-            month_in_order.append(month)
-        #Put the volume and price related data into the dictionaries
-        if not month in monthly_volume.keys():
-            monthly_volume[month] = day_history["Volume"]
-            monthly_volume_times_close[month] = \
-                day_history["Volume"] * day_history["Close"]
-        #if the month is a key for the dictionary, add the value to the existing value of the corresponding month.
+        # Puts he volume and total sales into seperate dicts
+        if not timestamp in monthly_volume.keys():
+            # Establishes key-value pairs
+            monthly_volume[timestamp] = entry["Volume"]
+            monthly_sales[timestamp] = \
+                entry["Volume"] * entry["Close"]
+
         else:
-            monthly_volume[month] += day_history["Volume"]
-            monthly_volume_times_close[month] += \
-                day_history["Volume"] * day_history["Close"]
+            # Adds to key-value pairs
+            monthly_volume[timestamp] += entry["Volume"]
+            monthly_sales[timestamp] += \
+                entry["Volume"] * entry["Close"]
 
-    #Append all information into a list of tuples.
-    for month in month_in_order:
-        average = round(monthly_volume_times_close[month]/monthly_volume[month], 2)
-        month_byte= unicodedata.normalize('NFKD', month).encode('ascii','ignore')
-        month_string = month_byte.decode("utf-8")
-        month_string = month_string.replace("-", "/")
-        monthly_averages.append((month_string, average))
+        # Append all information into list of tuples.
+        for timestamp in unique_date_list:
+            avg_monthly_sales = round(monthly_sales[timestamp]/monthly_volume[timestamp], 2)
+            month_byte = unicodedata.normalize('NFKD', timestamp).encode('ascii','ignore')
+            month_string = month_byte.decode("utf-8")
+            month_string = month_string.replace("-", "/")
+            monthly_averages.append((month_string, avg_monthly_sales))
+
 
 def six_best_months():
     return get_six_months_by_decision("+")
@@ -73,6 +83,11 @@ def six_worst_months():
     return get_six_months_by_decision("-")
 
 #Get the six best/worst month base on the parameter, this is a helper function
+"""
+    This is going to take me some time to read over. Has bubble-sort
+    (or any other sorting methods) been covered in class yet?
+    I'm hoping there's an easier way to do it, but if not, this looks like it should work!
+"""
 def get_six_months_by_decision(decision):
     result = []
     #If the monthly_averages is empty, return a list of empty tuples
@@ -110,7 +125,19 @@ def get_six_months_by_decision(decision):
     return result
 
 def read_json_from_file(file_name):
-    with open(file_name) as file_handle:
-        file_contents = file_handle.read()
+    """
+    Reads and decodes .json file for use.
+
+    :param file_name: The name of the JSON formatted file that contains stock prices
+    :return: Decoded JSON object
+    """
+    # use a try-catch block when accessing files to ensure that if the file is not found
+    # an exception will be thrown.
+    # Note: the logic of your statement is fine, its just good to have this. - Eugene
+    try:
+        with open(file_name) as file_handle:
+            file_contents = file_handle.read()
+    except FileNotFoundError:
+            raise FileNotFoundError("File Not Found!")
 
     return json.loads(file_contents)
