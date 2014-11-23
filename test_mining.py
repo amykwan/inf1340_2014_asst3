@@ -6,9 +6,10 @@ __email__ = "ses@drsusansim.org"
 __copyright__ = "2014 Susan Sim"
 __license__ = "MIT License"
 
-__status__ = "Prototype"
+__status__ = "v1"
 
 # imports one per line
+import pytest
 from mining import *
 
 
@@ -22,3 +23,21 @@ def test_goog():
     assert six_worst_months() == [('2004/08', 104.66), ('2004/09', 116.38),
                                   ('2004/10', 164.52), ('2004/11', 177.09),
                                   ('2004/12', 181.01), ('2005/03', 181.18)]
+
+
+def test_no_file_found():
+    with pytest.raises(FileNotFoundError):
+        read_stock_data("NOFILE", "data/NOFILE.json")
+
+
+#we need to decide what we want the file to do with this.
+# At the moment it passes because it does happen to return a ValueError,
+# but we should have it deliberately rather than accidentally return that.
+def test_empty_file():
+    with pytest.raises(ValueError):
+        read_stock_data("EMPTYFILE", "data/EMPTYFILE.json")
+
+#ditto.
+def test_incomplete_file():
+    with pytest.raises(ValueError):
+        read_stock_data("INCOMPLETE", "data/INCOMPLETE.json")
