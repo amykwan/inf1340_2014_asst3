@@ -50,30 +50,49 @@ def read_stock_data(stock_name, stock_file_name):
     # creates 2 dict with a key-value pair of [timestamp][value]
     for entry in stock_info:
         # Take month and year from date in format "YYYY-MM"
+        # Somewhere in this structure it is assigning MULTIPLE keys to the same value - ex:
+        # There are multiple keys with the value "2007-10" for some reason. Probably python
+        # is not able to tell if the date written is unique, maybe it's not comparing strings
+        # but is instead comparing memory locations
         timestamp = entry["Date"][0:7]
+
+        # The unique_date_list structure is actually not used...
         if timestamp not in unique_date_list:
             unique_date_list.append(timestamp)
 
-        # Puts he volume and total sales into seperate dicts
-        if not timestamp in monthly_volume.keys():
+        # Puts the volume and total sales into seperate dicts
+        if timestamp not in monthly_volume.keys():
             # Establishes key-value pairs
             monthly_volume[timestamp] = entry["Volume"]
+
+        if timestamp not in monthly_sales.keys():
+            # Establishes key-value pairs
             monthly_sales[timestamp] = \
                 entry["Volume"] * entry["Close"]
 
         else:
             # Adds to key-value pairs
-            monthly_volume[timestamp] += entry["Volume"]
-            monthly_sales[timestamp] += \
-                entry["Volume"] * entry["Close"]
+            # += This does not work with lists, you needs to do:
+            # l = []
+            # l = l + x
+            monthly_volume[timestamp] = monthly_volume[timestamp] + entry["Volume"]
+            monthly_sales[timestamp] = \
+                monthly_sales[timestamp] + (entry["Volume"] * entry["Close"])
 
         # Append all information into list of tuples.
         for timestamp in unique_date_list:
+            # This isn't happening (below) - Eugene
+            #
             avg_monthly_sales = round(monthly_sales[timestamp]/monthly_volume[timestamp], 2)
             month_byte = unicodedata.normalize('NFKD', timestamp).encode('ascii','ignore')
             month_string = month_byte.decode("utf-8")
             month_string = month_string.replace("-", "/")
             monthly_averages.append((month_string, avg_monthly_sales))
+            print(timestamp)
+
+
+    #print(monthly_sales)
+    print(unique_date_list)
 
 
 def six_best_months():
@@ -93,12 +112,14 @@ def get_six_months_by_decision(decision):
     #If the monthly_averages is empty, return a list of empty tuples
     if monthly_averages == [] or decision not in "+-":
         result = [('', 0.0), ('', 0.0), ('', 0.0), ('', 0.0), ('', 0.0), ('', 0.0)]
+
     #Return all the avaiable day averages if the length of the list is less than or equal to 6
     elif len(monthly_averages) <= 6:
         for month_history in monthly_averages:
             result.append(month_history)
         for count in range(6 - len(monthly_averages)):
             result.append(('', 0.0))
+
     #Check the decision and perform different acts
     else:
         #by here have checked that there is 6 months of data
@@ -108,14 +129,14 @@ def get_six_months_by_decision(decision):
         #Compare the rest of the averages with the six averages in the result list
         for month_history in monthly_averages[6:]:
             for count in range(6):
-                #If decision equals to "+", then perform the act of finding the best monthes
+                #If decision equals to "+", then perform the act of finding the best months
                 if decision == "+":
                     #Exchange the one on the result list if the average is higher than it
                     if result[count][1] < month_history[1]:
                         old_result = (result[count][0], result[count][1])
                         result[count] = month_history
                         month_history = old_result
-                #If decision equals to "+", then perform the act of finding the worst monthes
+                #If decision equals to "+", then perform the act of finding the worst months
                 elif decision == "-":
                     #Exchange the one on the result list if the average is lower than it
                     if result[count][1] > month_history[1]:
@@ -138,6 +159,6 @@ def read_json_from_file(file_name):
         with open(file_name) as file_handle:
             file_contents = file_handle.read()
     except FileNotFoundError:
-            raise FileNotFoundError("File Not Found!")
+           raise FileNotFoundError("File Not Found!")
 
     return json.loads(file_contents)
