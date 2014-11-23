@@ -57,8 +57,8 @@ def read_stock_data(stock_name, stock_file_name):
         timestamp = entry["Date"][0:7]
 
         # The unique_date_list structure is actually not used...
-        if timestamp not in unique_date_list:
-            unique_date_list.append(timestamp)
+        #if timestamp not in unique_date_list:
+        #    unique_date_list.append(timestamp)
 
         # Puts the volume and total sales into seperate dicts
         if timestamp not in monthly_volume.keys():
@@ -80,19 +80,13 @@ def read_stock_data(stock_name, stock_file_name):
                 monthly_sales[timestamp] + (entry["Volume"] * entry["Close"])
 
         # Append all information into list of tuples.
-        for timestamp in unique_date_list:
-            # This isn't happening (below) - Eugene
-            #
-            avg_monthly_sales = round(monthly_sales[timestamp]/monthly_volume[timestamp], 2)
-            month_byte = unicodedata.normalize('NFKD', timestamp).encode('ascii','ignore')
-            month_string = month_byte.decode("utf-8")
-            month_string = month_string.replace("-", "/")
-            monthly_averages.append((month_string, avg_monthly_sales))
-            print(timestamp)
+    for date in monthly_sales.keys():
+        avg_monthly_sales = round(monthly_sales[date]/monthly_volume[date], 2)
+        month_byte = unicodedata.normalize('NFKD', date).encode('ascii','ignore')
+        month_string = month_byte.decode("utf-8")
+        month_string = month_string.replace("-", "/")
+        monthly_averages.append((month_string, avg_monthly_sales))
 
-
-    #print(monthly_sales)
-    print(unique_date_list)
 
 
 def six_best_months():
