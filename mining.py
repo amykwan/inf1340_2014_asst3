@@ -6,13 +6,14 @@ __email__ = "ses@drsusansim.org"
 __copyright__ = "2014 Susan Sim"
 __license__ = "MIT License"
 
-__status__ = "Prototype"
+__status__ = "v4"
 
 import json
 import unicodedata
 
 stock_data = []
 monthly_averages = []
+
 
 def clean_stock_lists():
     stock_data.clear()

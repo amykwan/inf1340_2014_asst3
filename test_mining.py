@@ -6,7 +6,7 @@ __email__ = "ses@drsusansim.org"
 __copyright__ = "2014 Susan Sim"
 __license__ = "MIT License"
 
-__status__ = "v1"
+__status__ = "v2"
 
 # imports one per line
 import pytest
@@ -25,7 +25,6 @@ def test_goog():
                                    ('2004/12', 181.01), ('2005/03', 181.18)]
 
 
-#right now test_sample only works if test_goog is commented out, and vice versa
 def test_sample():
     read_stock_data("SAMPLE", "data\SAMPLE.json")
 
@@ -33,12 +32,66 @@ def test_sample():
                                  ('2003/05', 44.67), ('2003/08', 44.63),
                                  ('2003/10', 44.61), ('2003/12', 44.45)]
 
+#####TESTING FOR MISSING KEYS - all currently break the code.
+# Need to figure out what the asserts should be before we can fix.####
+# def test_no_date_key():
+#     read_stock_data("NOKEY_DATE", "data\NOKEY_DATE.json")
+#
+#     assert six_best_months() == [('2003/06', 44.82), ('2003/11', 44.74),
+#                                  ('2003/05', 44.67), ('2003/08', 44.63),
+#                                  ('2003/10', 44.61), ('2003/12', 44.45)]
+#
+# def test_no_close_key():
+#     read_stock_data("NOKEY_CLOSE", "data\NOKEY_DATE.json")
+#
+#     assert six_best_months() == [('2003/06', 44.82), ('2003/11', 44.74),
+#                                  ('2003/05', 44.67), ('2003/08', 44.63),
+#                                  ('2003/10', 44.61), ('2003/12', 44.45)]
+#
+# def test_no_volume_key():
+#     read_stock_data("NOKEY_VOLUME", "data\NOKEY_VOLUME.json")
+#
+#     assert six_best_months() == [('2003/06', 44.82), ('2003/11', 44.74),
+#                                  ('2003/05', 44.67), ('2003/08', 44.63),
+#                                  ('2003/10', 44.61), ('2003/12', 44.45)]
+
+#####TESTING FOR MISSING VALUES - all currently break the code.
+# Need to figure out what the asserts should be before we can fix.####
+# def test_no_date_value():
+#     read_stock_data("NOKEY_DATE", "data\NOKEY_DATE.json")
+#
+#     assert six_best_months() == [('2003/06', 44.82), ('2003/11', 44.74),
+#                                  ('2003/05', 44.67), ('2003/08', 44.63),
+#                                  ('2003/10', 44.61), ('2003/12', 44.45)]
+#
+# def test_no_close_value():
+#     read_stock_data("NOKEY_CLOSE", "data\NOKEY_DATE.json")
+#
+#     assert six_best_months() == [('2003/06', 44.82), ('2003/11', 44.74),
+#                                  ('2003/05', 44.67), ('2003/08', 44.63),
+#                                  ('2003/10', 44.61), ('2003/12', 44.45)]
+#
+# def test_no_volume_value():
+#     read_stock_data("NOKEY_VOLUME", "data\NOKEY_VOLUME.json")
+#
+#     assert six_best_months() == [('2003/06', 44.82), ('2003/11', 44.74),
+#                                  ('2003/05', 44.67), ('2003/08', 44.63),
+#                                  ('2003/10', 44.61), ('2003/12', 44.45)]
+
+######TESTING INVALID VALUES: future date, date with wrong format, date with letters, close
+#value with letters, volume with letters
+# Need to figure out what the asserts should be before we can fix.####
+# def test_invalid_values():
+#     read_stock_data("WRONG_VALUES", "data\WRONG_VALUES.json")
+#
+#     assert six_best_months() == [('2003/06', 44.82), ('2003/11', 44.74),
+#                                  ('2003/05', 44.67), ('2003/08', 44.63),
+#                                  ('2003/10', 44.61), ('2003/12', 44.45)]
 
 
 def test_no_file_found():
     with pytest.raises(FileNotFoundError):
         read_stock_data("NOFILE", "data/NOFILE.json")
-
 
 #we need to decide what we want the file to do with this.
 # At the moment it passes because it does happen to return a ValueError,
