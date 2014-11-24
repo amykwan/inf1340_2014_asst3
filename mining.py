@@ -158,5 +158,6 @@ def read_json_from_file(file_name):
             file_contents = file_handle.read()
     except FileNotFoundError:
         raise FileNotFoundError("File Not Found!")
-
+    except ValueError:
+        raise ValueError("This file is empty or not in the correct format!")
     return json.loads(file_contents)
