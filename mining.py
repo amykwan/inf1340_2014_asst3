@@ -13,8 +13,10 @@ import unicodedata
 
 stock_data = []
 monthly_averages = []
-result = []
-current_stock = ""
+
+def clean_stock_lists():
+    stock_data.clear()
+    monthly_averages.clear()
 
 
 def read_stock_data(stock_name, stock_file_name):
@@ -30,6 +32,9 @@ def read_stock_data(stock_name, stock_file_name):
     :param stock_file_name: Input JSON file
     :return: unused in this iteration.
     """
+    # Ensure that there is no data left over from the previous run
+    clean_stock_lists()
+
     # Decode JSON to object
     stock_info = read_json_from_file(stock_file_name)
 
