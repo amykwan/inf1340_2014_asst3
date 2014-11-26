@@ -6,7 +6,7 @@ __email__ = "ses@drsusansim.org"
 __copyright__ = "2014 Susan Sim"
 __license__ = "MIT License"
 
-__status__ = "v2"
+__status__ = "v3"
 
 # imports one per line
 import pytest
@@ -17,90 +17,73 @@ def test_goog():
     read_stock_data("GOOG", "data\GOOG.json")
 
     assert six_best_months() == [('2007/12', 693.76), ('2007/11', 676.55),
-                                  ('2007/10', 637.38), ('2008/01', 599.42),
-                                  ('2008/05', 576.29), ('2008/06', 555.34)]
+                                 ('2007/10', 637.38), ('2008/01', 599.42),
+                                 ('2008/05', 576.29), ('2008/06', 555.34)]
 
     assert six_worst_months() == [('2004/08', 104.66), ('2004/09', 116.38),
-                                   ('2004/10', 164.52), ('2004/11', 177.09),
-                                   ('2004/12', 181.01), ('2005/03', 181.18)]
+                                  ('2004/10', 164.52), ('2004/11', 177.09),
+                                  ('2004/12', 181.01), ('2005/03', 181.18)]
 
 
-def test_sample():
-    read_stock_data("SAMPLE", "data\SAMPLE.json")
+#test case where not enough months of data for two discrete sets of best and worst
+def test_overlapping_sets():
+    read_stock_data("OSETS", "data\OSETS.json")
 
     assert six_best_months() == [('2003/06', 44.82), ('2003/11', 44.74),
                                  ('2003/05', 44.67), ('2003/08', 44.63),
                                  ('2003/10', 44.61), ('2003/12', 44.45)]
 
-#####TESTING FOR MISSING KEYS - all currently break the code.
-# Need to figure out what the asserts should be before we can fix.####
-# def test_no_date_key():
-#     read_stock_data("NOKEY_DATE", "data\NOKEY_DATE.json")
-#
-#     assert six_best_months() == [('2003/06', 44.82), ('2003/11', 44.74),
-#                                  ('2003/05', 44.67), ('2003/08', 44.63),
-#                                  ('2003/10', 44.61), ('2003/12', 44.45)]
-#
-# def test_no_close_key():
-#     read_stock_data("NOKEY_CLOSE", "data\NOKEY_DATE.json")
-#
-#     assert six_best_months() == [('2003/06', 44.82), ('2003/11', 44.74),
-#                                  ('2003/05', 44.67), ('2003/08', 44.63),
-#                                  ('2003/10', 44.61), ('2003/12', 44.45)]
-#
-# def test_no_volume_key():
-#     read_stock_data("NOKEY_VOLUME", "data\NOKEY_VOLUME.json")
-#
-#     assert six_best_months() == [('2003/06', 44.82), ('2003/11', 44.74),
-#                                  ('2003/05', 44.67), ('2003/08', 44.63),
-#                                  ('2003/10', 44.61), ('2003/12', 44.45)]
+    assert six_worst_months() == [('2003/09', 44.15), ('2003/07', 44.30),
+                                  ('2003/12', 44.45), ('2003/10', 44.61),
+                                  ('2003/08', 44.63), ('2003/05', 44.67)]
 
-#####TESTING FOR MISSING VALUES - all currently break the code.
-# Need to figure out what the asserts should be before we can fix.####
-# def test_no_date_value():
-#     read_stock_data("NOKEY_DATE", "data\NOKEY_DATE.json")
-#
-#     assert six_best_months() == [('2003/06', 44.82), ('2003/11', 44.74),
-#                                  ('2003/05', 44.67), ('2003/08', 44.63),
-#                                  ('2003/10', 44.61), ('2003/12', 44.45)]
-#
-# def test_no_close_value():
-#     read_stock_data("NOKEY_CLOSE", "data\NOKEY_DATE.json")
-#
-#     assert six_best_months() == [('2003/06', 44.82), ('2003/11', 44.74),
-#                                  ('2003/05', 44.67), ('2003/08', 44.63),
-#                                  ('2003/10', 44.61), ('2003/12', 44.45)]
-#
-# def test_no_volume_value():
-#     read_stock_data("NOKEY_VOLUME", "data\NOKEY_VOLUME.json")
-#
-#     assert six_best_months() == [('2003/06', 44.82), ('2003/11', 44.74),
-#                                  ('2003/05', 44.67), ('2003/08', 44.63),
-#                                  ('2003/10', 44.61), ('2003/12', 44.45)]
 
-######TESTING INVALID VALUES: future date, date with wrong format, date with letters, close
-#value with letters, volume with letters
-# Need to figure out what the asserts should be before we can fix.####
-# def test_invalid_values():
-#     read_stock_data("WRONG_VALUES", "data\WRONG_VALUES.json")
+#tests a situation in which only four months' of data is supplied - currently fails
+# def test_too_few_months():
+#     read_stock_data("TOOFEW", "data\TOOFEW.json")
 #
-#     assert six_best_months() == [('2003/06', 44.82), ('2003/11', 44.74),
-#                                  ('2003/05', 44.67), ('2003/08', 44.63),
-#                                  ('2003/10', 44.61), ('2003/12', 44.45)]
+#     assert six_best_months() == [('', 0.0), ('', 0.0), ('', 0.0),
+#                                  ('', 0.0), ('', 0.0), ('', 0.0)]
+#
+#     assert six_worst_months() == [('', 0.0), ('', 0.0), ('', 0.0),
+#                                   ('', 0.0), ('', 0.0), ('', 0.0)]
 
+#tests data in non-chronological order
+def test_non_chrono_order():
+    read_stock_data("NONCHRONO", "data/NONCHRONO.json")
+
+    assert six_best_months() == [('2004/03', 45.18), ('2004/04', 45.02),
+                                 ('2003/06', 44.82), ('2003/11', 44.74),
+                                 ('2004/05', 44.71), ('2003/05', 44.67)]
+
+    assert six_worst_months() == [('2003/09', 44.15), ('2004/02', 44.28),
+                                  ('2003/07', 44.30), ('2004/01', 44.45),
+                                  ('2003/10', 44.61), ('2003/08', 44.63)]
+
+
+#tests duplicate monthly averages. In this case, both Dec 03 and Jan 04 return 44.45. As per her instructions,
+#the most recent date should be returned, but currently it's the earlier date
+# def test_duplicate_values():
+#     read_stock_data("DUPVAL", "data/DUPVAL.json")
+#
+#     assert six_best_months() == [('2004/03', 45.18), ('2004/04', 45.02),
+#                                  ('2003/06', 44.82), ('2003/11', 44.74),
+#                                  ('2004/05', 44.71), ('2003/05', 44.67)]
+#
+#     assert six_worst_months() == [('2003/09', 44.15), ('2004/02', 44.28),
+#                                   ('2003/07', 44.30), ('2004/01', 44.45), #the second set in this row
+#                                   ('2003/10', 44.61), ('2003/08', 44.63)]
 
 def test_no_file_found():
     with pytest.raises(FileNotFoundError):
         read_stock_data("NOFILE", "data/NOFILE.json")
 
-#we need to decide what we want the file to do with this.
-# At the moment it passes because it does happen to return a ValueError,
-# but we should have it deliberately rather than accidentally return that.
+
 def test_empty_file():
     with pytest.raises(ValueError):
         read_stock_data("EMPTYFILE", "data/EMPTYFILE.json")
 
-#ditto.
+
 def test_incomplete_file():
     with pytest.raises(ValueError):
         read_stock_data("INCOMPLETE", "data/INCOMPLETE.json")
