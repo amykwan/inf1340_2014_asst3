@@ -10,12 +10,15 @@ __status__ = "v4"
 
 import json
 import unicodedata
+import re
 
 stock_data = []
 monthly_averages = []
 
 
 def clean_stock_lists():
+    global monthly_averages
+    global stock_data
     stock_data.clear()
     monthly_averages.clear()
 
@@ -31,7 +34,6 @@ def read_stock_data(stock_name, stock_file_name):
     :param stock_name: this parameter is required, but unused in this
         iteration.
     :param stock_file_name: Input JSON file
-    :return: unused in this iteration.
     """
     # Ensure that there is no data left over from the previous run
     clean_stock_lists()
@@ -46,7 +48,27 @@ def read_stock_data(stock_name, stock_file_name):
 
     for entry in stock_info:
         # Create a timestamp in format "YYYY-MM"
-        timestamp = entry["Date"][0:7]
+        timestamp = "0000-00";
+        if "Date" in entry.keys():
+            timestamp = entry["Date"][0:7]
+        else:
+            r = re.compile('.*-.*-.*')
+            for key in entry.keys():
+                if r.match(str(entry[key])):
+                    timestamp = entry[key][0:7]
+
+        close_price = 0.0;
+        if "Close" in entry.keys():
+            close_price = entry["Close"]
+        else:
+            close_price = entry[""]
+
+        volume = 0.0;
+        if "Volume" in entry.keys():
+            volume = entry["Volume"]
+        else:
+            volume = entry[""]
+
 
         # Check if timestamp already exists, if not add to list
         if timestamp not in unique_date_list:
@@ -55,19 +77,19 @@ def read_stock_data(stock_name, stock_file_name):
         # Check if timestamp is already a key in the monthly_volume list,
         # if not add.
         if timestamp not in monthly_volume.keys():
-            monthly_volume[timestamp] = entry["Volume"]
+            monthly_volume[timestamp] = volume
 
         # Check if timestamp is already a key in the monthly_sales list,
         # if not add.
         if timestamp not in monthly_sales.keys():
-            monthly_sales[timestamp] = entry["Volume"] * entry["Close"]
+            monthly_sales[timestamp] = volume * close_price
 
         # Total value of sales and volume into lists
         else:
             monthly_volume[timestamp] = monthly_volume[timestamp] + \
-                entry["Volume"]
+                volume
             monthly_sales[timestamp] = monthly_sales[timestamp] + \
-                entry["Volume"] * entry["Close"]
+                volume * close_price
 
     # Calculate average monthly sales, and change the date format to "YYYY/MM"
     # Append to the monthly_averages list
