@@ -6,7 +6,7 @@ __email__ = "ses@drsusansim.org"
 __copyright__ = "2014 Susan Sim"
 __license__ = "MIT License"
 
-__status__ = "v5"
+__status__ = "v6"
 
 import json
 import unicodedata
@@ -251,19 +251,26 @@ def visualize(stock_name, stock_file_name):
     print("Month   Average Price")
 
     for item in monthly_averages:
+        result = item[0] + " " + str(item[1])
         if item in get_best:
-            print(item[0] + " " + str(item[1]) + " <<< One of the Best Months")
-        elif item in get_worst:
-            print(item[0] + " " + str(item[1]) + " <<< One of the Worst Months")
-        else:
-            print(item[0] + " " + str(item[1]))
+            result += " <<< One of the Best Months"
+        if item in get_worst:
+            result += " <<< One of the Worst Months"
+            if item in get_best:
+                result = item[0] + " " + str(item[1]) + " <<< Best and Worst overlap"
+        print(result)
 
 
 def user_interface():
     company_name = input("Company name: ")
-    company_file = input("Company file: ")
+    while True:
+        try:
+            company_file = "data/" + input("Company file: ")
+            read_stock_data(company_name, company_file)
+            break
+        except:
+            print("Invalid Input.")
     visit = True
-    read_stock_data(company_name, company_file)
     while visit:
         print("-"*50)
         print("Choose your option")
@@ -281,12 +288,19 @@ def user_interface():
             visualize(company_name, company_file)
         elif option == "4":
             second_company_name = input("Second Company name: ")
-            second_company_file = input("Second Company file: ")
-            print(compare_two_stocks(company_name, company_file, second_company_name, second_company_file))
+            while True:
+                try:
+                    second_company_file =  "data/" + input("Second Company file: ")
+                    print(compare_two_stocks(company_name, company_file, second_company_name, second_company_file))
+                    break
+                except:
+                    print("Invalid Input.")
         elif option == "5":
             visit = False
         else:
             print("invalid option selected, please choose again from the following options: ")
 
 #Delete this line if you want to run test_mining
-user_interface()
+
+if __name__ == "__main__":
+    user_interface()
