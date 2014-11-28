@@ -6,7 +6,7 @@ __email__ = "ses@drsusansim.org"
 __copyright__ = "2014 Susan Sim"
 __license__ = "MIT License"
 
-__status__ = "v5"
+__status__ = "v7"
 
 import json
 import unicodedata
@@ -31,10 +31,14 @@ def read_stock_data(stock_name, stock_file_name):
     total volume of stock sold by month. These values are then used to
     calculate the average price of stock sold via the formula:
         Avg Stock Sold = Monthly Sales / Monthly Volume
-    :param stock_name: this parameter is required, but unused in this
+    :param stock_name: String. this parameter is required, but unused in this
         iteration.
-    :param stock_file_name: Input JSON file
+    :param stock_file_name: String. Input JSON file name and file location
+    relative to mining.py
+    :return: A list of tuples. Each tuple contains valid months in the stock
+    data and its average stock sold in that month the format('YYYY/DD', 111.11)
     """
+
     # Ensure that there is no data left over from the previous run
     clean_stock_lists()
 
@@ -68,7 +72,6 @@ def read_stock_data(stock_name, stock_file_name):
             volume = entry["Volume"]
         else:
             volume = entry[""]
-
 
         # Check if timestamp already exists, if not add to list
         if timestamp not in unique_date_list:
@@ -106,6 +109,8 @@ def read_stock_data(stock_name, stock_file_name):
 def six_best_months():
     """
     This function produces the best six months of average stock price.
+    :param: A list of tuples. Each tuple contains valid months in the stock
+    data and its average stock sold in that month the format('YYYY/DD', 111.11)
     :return: The best six months of average stock price in a list of tuples, in
     the format('YYYY/DD', 111.11)
     """
@@ -125,6 +130,8 @@ def six_best_months():
 def six_worst_months():
     """
     This function produces the worst six months of average stock price.
+    :param: A list of tuples. Each tuple contains valid months in the stock
+    data and its average stock sold in that month the format('YYYY/DD', 111.11)
     :return: The worst six months of average stock price in a list of tuples,
     in the format ('YYYY/DD', 111.11)
     """
@@ -147,9 +154,12 @@ def validate_averages():
     full range of entries to sort through. If not, it will either return all
     zero values, or it will take what values it can and enter it into a list,
     and then return zero values.
-    :return: If the data is incomplete, a list of six months, if data is
-     complete it will
-    insert the string "Validated" into the list and return that.
+    :param: A list of tuples. Each tuple contains valid months in the stock
+    data and its average stock sold in that month the format('YYYY/DD', 111.11)
+    :return: If the data is incomplete, a list of six months with tuples
+     in the format ('', 0.0).
+     Or if data is complete it will insert the string "Validated" into the
+     list and return the updated list.
     """
     result = []
 
@@ -175,7 +185,6 @@ def validate_averages():
 def read_json_from_file(file_name):
     """
     Reads and decodes .json file for use.
-
     :param file_name: The name of the JSON formatted file that contains
     stock prices
     :return: Decoded JSON object
@@ -189,104 +198,3 @@ def read_json_from_file(file_name):
     except ValueError:
         raise ValueError("This file is empty or not in the correct format!")
     return json.loads(file_contents)
-
-
-#Compare Two Stocks Function
-def compare_two_stocks(stock_one_name, stock_one_file_name,
-                       stock_two_name, stock_two_file_name):
-    #clean stock list one
-    clean_stock_lists()
-    #Initialized the average months for each stocks
-    read_stock_data(stock_one_name, stock_one_file_name)
-    stock_one = monthly_averages[:]
-    stock_one_std = get_standard_deviation(stock_one)
-
-    #clean stock list two
-    clean_stock_lists()
-    read_stock_data(stock_two_name, stock_two_file_name)
-    stock_two = monthly_averages[:]
-    stock_two_std = get_standard_deviation(stock_two)
-
-    #Compare their standard deviations
-    if stock_one_std > stock_two_std:
-        return stock_one_name + " has the highest standard deviation!"
-    elif stock_one_std == stock_two_std:
-        return stock_one_name + " and " + stock_two_name + " have the same standard deviation!"
-    else:
-        return stock_two_name + " has the highest standard deviation!"
-
-
-#Helper Function for finding the standard deviations
-def get_standard_deviation(stock_info):
-    standard_deviation = 0.0
-    total = 0.0
-
-    #Finding the mean value base on the average values of all months
-    for item in stock_info:
-        total += item[1]
-    mean = total/len(stock_info)
-
-    deviations = []
-
-    #Find the standard deviations
-    for item in stock_info:
-        deviations.append(item[1] - mean)
-    for deviation in deviations:
-        standard_deviation += deviation**2
-    std_deviation = standard_deviation/len(stock_info)
-
-    return std_deviation
-
-
-#Visualization
-def visualize(stock_name, stock_file_name):
-
-    #Find the best and worst months
-    read_stock_data(stock_name, stock_file_name)
-    get_best = six_best_months()
-    get_worst = six_worst_months()
-
-    #Print out the lists.
-    print("---All Stock Average Prices For ", stock_name)
-    print("Month   Average Price")
-
-    for item in monthly_averages:
-        if item in get_best:
-            print(item[0] + " " + str(item[1]) + " <<< One of the Best Months")
-        elif item in get_worst:
-            print(item[0] + " " + str(item[1]) + " <<< One of the Worst Months")
-        else:
-            print(item[0] + " " + str(item[1]))
-
-
-def user_interface():
-    company_name = input("Company name: ")
-    company_file = input("Company file: ")
-    visit = True
-    read_stock_data(company_name, company_file)
-    while visit:
-        print("-"*50)
-        print("Choose your option")
-        print("1. Display the best six")
-        print("2. Display the worst six")
-        print("3. Display all stock average prices with best and worst six")
-        print("4. Display comparison of two stocks")
-        print("5. Exit")
-        option = (input("Choose: "))
-        if option == "1":
-            print(six_best_months())
-        elif option == "2":
-            print(six_worst_months())
-        elif option == "3":
-            visualize(company_name, company_file)
-        elif option == "4":
-            second_company_name = input("Second Company name: ")
-            second_company_file = input("Second Company file: ")
-            print(compare_two_stocks(company_name, company_file, second_company_name, second_company_file))
-        elif option == "5":
-            visit = False
-        else:
-            print("invalid option selected, please choose again from the following options: ")
-
-#Delete this line if you want to run test_mining
-user_interface()

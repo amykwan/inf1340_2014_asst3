@@ -25,8 +25,11 @@ def test_goog():
                                   ('2004/12', 181.01), ('2005/03', 181.18)]
 
 
-#test case where not enough months of data for two discrete sets of best and worst
 def test_overlapping_sets():
+    """
+    Tests case where there is not enough months of data for two discrete
+    sets of best and worst averages.
+    """
     read_stock_data("OSETS", "data\OSETS.json")
 
     assert six_best_months() == [('2003/06', 44.82), ('2003/11', 44.74),
@@ -38,19 +41,39 @@ def test_overlapping_sets():
                                   ('2003/08', 44.63), ('2003/05', 44.67)]
 
 
-#tests a situation in which only four months' of data is supplied - currently fails
+
+# Not returning in descending order. Not actually specified in PDF but is
+#implicit in first test results. Can this be easily updated?
 def test_too_few_months():
+    """
+    Tests case with fewer than six months' worth of data.
+    """
     read_stock_data("TOOFEW", "data\TOOFEW.json")
 
-    assert six_best_months() == [('2003/05', 44.67), ('2003/06', 44.82), ('2003/07', 44.3),
-                                 ('2003/08', 44.63), ('', 0.0), ('', 0.0)]
+    assert six_best_months() == [('2003/05', 44.67), ('2003/06', 44.82),
+                                 ('2003/07', 44.3), ('2003/08', 44.63),
+                                 ('', 0.0), ('', 0.0)]
 
-    assert six_worst_months() == [('2003/05', 44.67), ('2003/06', 44.82), ('2003/07', 44.3), ('2003/08', 44.63),
+    assert six_worst_months() == [('2003/05', 44.67), ('2003/06', 44.82),
+                                  ('2003/07', 44.3), ('2003/08', 44.63),
                                   ('', 0.0), ('', 0.0)]
 
+    #this is the sort order (I think) it should be returning
+    # assert six_best_months() == [('2003/06', 44.82), ('2003/05', 44.67),
+    #                              ('2003/08', 44.63), ('2003/07', 44.3),
+    #                              ('', 0.0), ('', 0.0)]
+    #
+    # assert six_worst_months() == [('2003/07', 44.3), ('2003/08', 44.63),
+    #                               ('2003/05', 44.67), ('2003/06', 44.82),
+    #                               ('', 0.0), ('', 0.0)]
 
-#tests data in non-chronological order
+
+# Best not returning in descending order. Not actually specified in PDF but is
+#implicit in first test results. Can this be easily updated?
 def test_non_chrono_order():
+    """
+    Tests data in non-chronological order.
+    """
     read_stock_data("NONCHRONO", "data/NONCHRONO.json")
 
     assert six_best_months() == [('2004/03', 45.18), ('2004/04', 45.02),
@@ -61,31 +84,59 @@ def test_non_chrono_order():
                                   ('2003/07', 44.30), ('2004/01', 44.45),
                                   ('2003/10', 44.61), ('2003/08', 44.63)]
 
+    #The order it should be returning
+    # assert six_best_months() == [('2003/06', 44.82), ('2003/11', 44.74),
+    #                              ('2004/05', 44.71), ('2003/05', 44.67),
+    #                              ('2004/03', 45.18), ('2004/04', 45.02)]
 
-#tests duplicate monthly averages. In this case, both Dec 03 and Jan 04 return 44.45. As per her instructions,
-#the most recent date should be returned, but currently it's the earlier date
+
+# Best months not returning in descending order; worst months showing duplicate values
 def test_duplicate_values():
+    """
+    Tests duplicate monthly averages; should return most recent of any
+    duplicates.
+    """
     read_stock_data("DUPVAL", "data/DUPVAL.json")
 
     assert six_best_months() == [('2004/03', 45.18), ('2004/04', 45.02),
                                  ('2003/06', 44.82), ('2003/11', 44.74),
                                  ('2004/05', 44.71), ('2003/05', 44.67)]
 
-    #KELVIN： The original answer you put there was wrong, since there is a smaller set compares to the old answer
-    assert six_worst_months() == [('2003/09', 44.15), ('2004/02', 44.28), ('2003/07', 44.3), ('2003/12', 44.45),
+    assert six_worst_months() == [('2003/09', 44.15), ('2004/02', 44.28),
+                                  ('2003/07', 44.3), ('2003/12', 44.45),
                                   ('2004/01', 44.45), ('2003/10', 44.61)]
+
+    #What it should be returning
+    # assert six_best_months() == [('2003/06', 44.82), ('2003/11', 44.74),
+    #                              ('2004/05', 44.71), ('2003/05', 44.67),
+    #                              ('2004/03', 45.18), ('2004/04', 45.02)]
+    # assert six_worst_months() == [('2003/09', 44.15), ('2004/02', 44.28),
+    #                               ('2003/07', 44.30), ('2004/01', 44.45),
+    #                               ('2003/10', 44.61), ('2003/08', 44.63)]
 
 
 def test_no_file_found():
+    """
+    Tests case of no json file found at specified location.
+    """
     with pytest.raises(FileNotFoundError):
         read_stock_data("NOFILE", "data/NOFILE.json")
 
 
 def test_empty_file():
+    """
+    Tests case of a json file with no data in it.
+    """
+    """
+    :return:
+    """
     with pytest.raises(ValueError):
         read_stock_data("EMPTYFILE", "data/EMPTYFILE.json")
 
 
 def test_incomplete_file():
+    """
+    Tests case with incorrectly formatted JSON data in it.
+    """
     with pytest.raises(ValueError):
         read_stock_data("INCOMPLETE", "data/INCOMPLETE.json")
