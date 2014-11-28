@@ -6,7 +6,7 @@ __email__ = "ses@drsusansim.org"
 __copyright__ = "2014 Susan Sim"
 __license__ = "MIT License"
 
-__status__ = "v4"
+__status__ = "v5"
 
 import json
 import unicodedata
@@ -48,7 +48,7 @@ def read_stock_data(stock_name, stock_file_name):
 
     for entry in stock_info:
         # Create a timestamp in format "YYYY-MM"
-        timestamp = "0000-00";
+        timestamp = "0000-00"
         if "Date" in entry.keys():
             timestamp = entry["Date"][0:7]
         else:
@@ -57,13 +57,13 @@ def read_stock_data(stock_name, stock_file_name):
                 if r.match(str(entry[key])):
                     timestamp = entry[key][0:7]
 
-        close_price = 0.0;
+        close_price = 0.0
         if "Close" in entry.keys():
             close_price = entry["Close"]
         else:
             close_price = entry[""]
 
-        volume = 0.0;
+        volume = 0.0
         if "Volume" in entry.keys():
             volume = entry["Volume"]
         else:
@@ -189,3 +189,104 @@ def read_json_from_file(file_name):
     except ValueError:
         raise ValueError("This file is empty or not in the correct format!")
     return json.loads(file_contents)
+
+
+#Compare Two Stocks Function
+def compare_two_stocks(stock_one_name, stock_one_file_name,
+                       stock_two_name, stock_two_file_name):
+    #clean stock list one
+    clean_stock_lists()
+    #Initialized the average months for each stocks
+    read_stock_data(stock_one_name, stock_one_file_name)
+    stock_one = monthly_averages[:]
+    stock_one_std = get_standard_deviation(stock_one)
+
+    #clean stock list two
+    clean_stock_lists()
+    read_stock_data(stock_two_name, stock_two_file_name)
+    stock_two = monthly_averages[:]
+    stock_two_std = get_standard_deviation(stock_two)
+
+    #Compare their standard deviations
+    if stock_one_std > stock_two_std:
+        return stock_one_name + " has the highest standard deviation!"
+    elif stock_one_std == stock_two_std:
+        return stock_one_name + " and " + stock_two_name + " have the same standard deviation!"
+    else:
+        return stock_two_name + " has the highest standard deviation!"
+
+
+#Helper Function for finding the standard deviations
+def get_standard_deviation(stock_info):
+    standard_deviation = 0.0
+    total = 0.0
+
+    #Finding the mean value base on the average values of all months
+    for item in stock_info:
+        total += item[1]
+    mean = total/len(stock_info)
+
+    deviations = []
+
+    #Find the standard deviations
+    for item in stock_info:
+        deviations.append(item[1] - mean)
+    for deviation in deviations:
+        standard_deviation += deviation**2
+    std_deviation = standard_deviation/len(stock_info)
+
+    return std_deviation
+
+
+#Visualization
+def visualize(stock_name, stock_file_name):
+
+    #Find the best and worst months
+    read_stock_data(stock_name, stock_file_name)
+    get_best = six_best_months()
+    get_worst = six_worst_months()
+
+    #Print out the lists.
+    print("---All Stock Average Prices For ", stock_name)
+    print("Month   Average Price")
+
+    for item in monthly_averages:
+        if item in get_best:
+            print(item[0] + " " + str(item[1]) + " <<< One of the Best Months")
+        elif item in get_worst:
+            print(item[0] + " " + str(item[1]) + " <<< One of the Worst Months")
+        else:
+            print(item[0] + " " + str(item[1]))
+
+
+def user_interface():
+    company_name = input("Company name: ")
+    company_file = input("Company file: ")
+    visit = True
+    read_stock_data(company_name, company_file)
+    while visit:
+        print("-"*50)
+        print("Choose your option")
+        print("1. Display the best six")
+        print("2. Display the worst six")
+        print("3. Display all stock average prices with best and worst six")
+        print("4. Display comparison of two stocks")
+        print("5. Exit")
+        option = (input("Choose: "))
+        if option == "1":
+            print(six_best_months())
+        elif option == "2":
+            print(six_worst_months())
+        elif option == "3":
+            visualize(company_name, company_file)
+        elif option == "4":
+            second_company_name = input("Second Company name: ")
+            second_company_file = input("Second Company file: ")
+            print(compare_two_stocks(company_name, company_file, second_company_name, second_company_file))
+        elif option == "5":
+            visit = False
+        else:
+            print("invalid option selected, please choose again from the following options: ")
+
+#Delete this line if you want to run test_mining
+user_interface()
