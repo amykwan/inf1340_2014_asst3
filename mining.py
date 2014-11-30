@@ -1,9 +1,9 @@
 """ Docstring """
 
 __author__ = 'Eugene Kang, Amy Kwan, Jessica Mann, Susan Sim'
-__email__ = "ses@drsusansim.org"
+__email__ = "eugene.yc.kang@gmail.com, amykwan.cma@gmail.com, jessmann74@gmail.com, ses@drsusansim.org"
 
-__copyright__ = "2014 Susan Sim"
+__copyright__ = "2014 EKAKJMSS"
 __license__ = "MIT License"
 
 __status__ = "v7"
@@ -117,14 +117,11 @@ def six_best_months():
     result = validate_averages()
     # If data was validated, sort and order from highest to lowest starting at
     # index 0
-    if "Validated" in result:
-        sorted_best_avg = (sorted(monthly_averages, key=lambda tup: tup[1],
+    sorted_best_avg = (sorted(monthly_averages, key=lambda tup: tup[1],
                                   reverse=True))
-        return sorted_best_avg[0:6]
-
-    # If data was not validated, return the result passed to this function.
-    else:
-        return result
+    for count in range(6 - len(sorted_best_avg)):
+        sorted_best_avg.append(('', 0.0))
+    return sorted_best_avg[0:6]
 
 
 def six_worst_months():
@@ -138,14 +135,11 @@ def six_worst_months():
     result = validate_averages()
     # If data was validated, sort and order from lowest to highest starting at
     # index 0
-    if "Validated" in result:
-        sorted_worst_avg = (sorted(monthly_averages, key=lambda tup: tup[1],
+    sorted_worst_avg = (sorted(monthly_averages, key=lambda tup: tup[1],
                                    reverse=False))
-        return sorted_worst_avg[0:6]
-
-    # If data was not validated, return the result passed to this function.
-    else:
-        return result
+    for count in range(6 - len(sorted_worst_avg)):
+        sorted_worst_avg.append(('', 0.0))
+    return sorted_worst_avg[0:6]
 
 
 def validate_averages():
@@ -173,8 +167,6 @@ def validate_averages():
     elif len(monthly_averages) <= 6:
         for entry in monthly_averages:
             result.append(entry)
-        for count in range(6 - len(monthly_averages)):
-            result.append(('', 0.0))
 
     # Otherwise return validated
     else:
