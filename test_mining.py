@@ -1,4 +1,6 @@
-""" Docstring """
+"""
+Module to test mining.py
+"""
 
 __author__ = 'Eugene Kang, Amy Kwan, Jessica Mann, Susan Sim'
 __email__ = "eugene.yc.kang@gmail.com, amykwan.cma@gmail.com, jessmann74@gmail.com, ses@drsusansim.org"
@@ -6,7 +8,7 @@ __email__ = "eugene.yc.kang@gmail.com, amykwan.cma@gmail.com, jessmann74@gmail.c
 __copyright__ = "2014 EKAKJMSS"
 __license__ = "MIT License"
 
-__status__ = "v5"
+__status__ = "v6"
 
 # imports one per line
 import pytest
@@ -14,6 +16,9 @@ from mining import *
 
 
 def test_goog():
+    """
+    Tests six_best_months and six_worst_months.
+    """
     read_stock_data("GOOG", "data\GOOG.json")
 
     assert six_best_months() == [('2007/12', 693.76), ('2007/11', 676.55),
@@ -41,9 +46,6 @@ def test_overlapping_sets():
                                   ('2003/08', 44.63), ('2003/05', 44.67)]
 
 
-
-# Not returning in descending order. Not actually specified in PDF but is
-#implicit in first test results. Can this be easily updated?
 def test_too_few_months():
     """
     Tests case with fewer than six months' worth of data.
@@ -59,8 +61,6 @@ def test_too_few_months():
                                   ('', 0.0), ('', 0.0)]
 
 
-# Best not returning in descending order. Not actually specified in PDF but is
-#implicit in first test results. Can this be easily updated?
 def test_non_chrono_order():
     """
     Tests data in non-chronological order.
@@ -76,7 +76,6 @@ def test_non_chrono_order():
                                   ('2003/10', 44.61), ('2003/08', 44.63)]
 
 
-# Best months not returning in descending order; worst months showing duplicate values
 def test_duplicate_values():
     """
     Tests duplicate monthly averages; should return most recent of any

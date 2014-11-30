@@ -1,4 +1,7 @@
-""" Docstring """
+"""
+Program that reads stock data and returns the best and worst monthly average
+stock prices
+"""
 
 __author__ = 'Eugene Kang, Amy Kwan, Jessica Mann, Susan Sim'
 __email__ = "eugene.yc.kang@gmail.com, amykwan.cma@gmail.com, jessmann74@gmail.com, ses@drsusansim.org"
@@ -6,7 +9,7 @@ __email__ = "eugene.yc.kang@gmail.com, amykwan.cma@gmail.com, jessmann74@gmail.c
 __copyright__ = "2014 EKAKJMSS"
 __license__ = "MIT License"
 
-__status__ = "v7"
+__status__ = "v8"
 
 import json
 import unicodedata
@@ -17,6 +20,9 @@ monthly_averages = []
 
 
 def clean_stock_lists():
+    """
+    Clears existing data from stock_data and monthly_averages
+    """
     global monthly_averages
     global stock_data
     stock_data.clear()
