@@ -4,15 +4,17 @@ stock prices
 """
 
 __author__ = 'Eugene Kang, Amy Kwan, Jessica Mann'
-__email__ = "eugene.yc.kang@gmail.com, amykwan.cma@gmail.com, jessmann74@gmail.com"
+__email__ = "eugene.yc.kang@gmail.com, amykwan.cma@gmail.com, " \
+            "jessmann74@gmail.com"
 
 __copyright__ = "2014 EKAKJM"
 __license__ = "MIT License"
 
 __status__ = "v1"
 
-# imports one per line
-from mining import read_stock_data, monthly_averages, six_best_months, six_worst_months
+#imports one per line
+from mining import read_stock_data, monthly_averages, \
+    six_best_months, six_worst_months
 
 
 #Visualization
@@ -43,11 +45,13 @@ def visualize(stock_name, stock_file_name):
     for item in monthly_averages:
         result = item[0] + " " + str(item[1])
         if item in get_best:
-           result += " <<< One of the Best Months"
+            result += " <<< One of the Best Months"
         if item in get_worst:
             result += " <<< One of the Worst Months"
             if item in get_best:
-                result = item[0] + " " + str(item[1]) + " <<< Best and Worst overlap"
+                result = item[0] + " " + str(item[1]) + \
+                    " <<< Best and Worst overlap"
         print(result)
 
-#visualize("Google", "data/GOOG.json")
+#One example of visualize using available file
+visualize("Google", "data/GOOG.json")

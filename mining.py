@@ -3,7 +3,8 @@ Reads stock data and returns the best and worst monthly average stock prices
 """
 
 __author__ = 'Eugene Kang, Amy Kwan, Jessica Mann, Susan Sim'
-__email__ = "eugene.yc.kang@gmail.com, amykwan.cma@gmail.com, jessmann74@gmail.com, ses@drsusansim.org"
+__email__ = "eugene.yc.kang@gmail.com, amykwan.cma@gmail.com, " \
+            "jessmann74@gmail.com, ses@drsusansim.org"
 
 __copyright__ = "2014 EKAKJMSS"
 __license__ = "MIT License"
@@ -123,7 +124,7 @@ def six_best_months():
     # If data was validated, sort and order from highest to lowest starting at
     # index 0
     sorted_best_avg = (sorted(monthly_averages, key=lambda tup: tup[1],
-                                  reverse=True))
+                              reverse=True))
     for count in range(6 - len(sorted_best_avg)):
         sorted_best_avg.append(('', 0.0))
     return sorted_best_avg[0:6]
@@ -141,7 +142,7 @@ def six_worst_months():
     # If data was validated, sort and order from lowest to highest starting at
     # index 0
     sorted_worst_avg = (sorted(monthly_averages, key=lambda tup: tup[1],
-                                   reverse=False))
+                               reverse=False))
     for count in range(6 - len(sorted_worst_avg)):
         sorted_worst_avg.append(('', 0.0))
     return sorted_worst_avg[0:6]

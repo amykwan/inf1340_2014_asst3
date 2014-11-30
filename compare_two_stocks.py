@@ -4,14 +4,15 @@ companies' averaged monthly stock prices
 """
 
 __author__ = 'Eugene Kang, Amy Kwan, Jessica Mann'
-__email__ = "eugene.yc.kang@gmail.com, amykwan.cma@gmail.com, jessmann74@gmail.com"
+__email__ = "eugene.yc.kang@gmail.com, amykwan.cma@gmail.com, " \
+            "jessmann74@gmail.com"
 
 __copyright__ = "2014 EKAKJM"
 __license__ = "MIT License"
 
 __status__ = "v1"
 
-# imports one per line
+#imports one per line
 from mining import clean_stock_lists, read_stock_data, monthly_averages
 
 
@@ -51,7 +52,8 @@ def compare_two_stocks(stock_one_name, stock_one_file_name,
     if stock_one_std > stock_two_std:
         return stock_one_name + " has the highest standard deviation!"
     elif stock_one_std == stock_two_std:
-        return stock_one_name + " and " + stock_two_name + " have the same standard deviation!"
+        return stock_one_name + " and " + stock_two_name + \
+            " have the same standard deviation!"
     else:
         return stock_two_name + " has the highest standard deviation!"
 
@@ -85,4 +87,6 @@ def get_standard_deviation(stock_info):
 
     return std_deviation
 
-#print(compare_two_stocks("GOOG", "data/GOOG.json", "TSE-SO", "data/TSE-SO.json"))
+#One example of compare two stocks using available files
+print(compare_two_stocks("GOOG", "data/GOOG.json",
+                         "TSE-SO", "data/TSE-SO.json"))

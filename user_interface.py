@@ -4,7 +4,8 @@ and compare_two_stocks.py
 """
 
 __author__ = 'Eugene Kang, Amy Kwan, Jessica Mann'
-__email__ = "eugene.yc.kang@gmail.com, amykwan.cma@gmail.com, jessmann74@gmail.com"
+__email__ = "eugene.yc.kang@gmail.com, amykwan.cma@gmail.com, " \
+            "jessmann74@gmail.com"
 
 __copyright__ = "2014 EKAKJM"
 __license__ = "MIT License"
@@ -56,7 +57,8 @@ def user_interface():
     company_name = input("Company name: ")
     while True:
         try:
-            company_file = input("Company stock data file: ")
+            company_file = input("Company stock data file "
+                                 "(i.e., data\GOOG.json): ")
             read_stock_data(company_name, company_file)
             break
         except:
@@ -64,13 +66,13 @@ def user_interface():
     visit = True
     while visit:
         print("-"*50)
-        print("Choose your option")
+        print("Choose your option # (i.e., 1)")
         print("1. Display the best six months' average stock prices")
         print("2. Display the worst six months' average stock prices")
         print("3. Display all months' average stock prices with best and " +
               "worst six")
-        print("4. Display comparison of two companies' monthly average price " +
-              "standard deviation")
+        print("4. Display comparison of two companies' "
+              "monthly average price " + "standard deviation")
         print("5. Exit")
         option = (input("Choose: "))
         if option == "1":
@@ -80,11 +82,14 @@ def user_interface():
         elif option == "3":
             visualize(company_name, company_file)
         elif option == "4":
-            second_company_name = input("Second Company name: ")
+            second_company_name = input("Second Company name "
+                                        "(i.e., data\GOOG.json): ")
             while True:
                 try:
                     second_company_file = input("Second Company file: ")
-                    print(compare_two_stocks(company_name, company_file, second_company_name, second_company_file))
+                    print(compare_two_stocks(company_name, company_file,
+                                             second_company_name,
+                                             second_company_file))
                     break
                 except:
                     print("Invalid Input.")
@@ -94,6 +99,6 @@ def user_interface():
             print("Invalid option selected, please choose again from the \
                 following options: ")
 
-#run user interface
+#Run user interface
 if __name__ == "__main__":
     user_interface()

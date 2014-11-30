@@ -3,14 +3,15 @@ Module to test mining.py
 """
 
 __author__ = 'Eugene Kang, Amy Kwan, Jessica Mann, Susan Sim'
-__email__ = "eugene.yc.kang@gmail.com, amykwan.cma@gmail.com, jessmann74@gmail.com, ses@drsusansim.org"
+__email__ = "eugene.yc.kang@gmail.com, amykwan.cma@gmail.com, " \
+            "jessmann74@gmail.com, ses@drsusansim.org"
 
 __copyright__ = "2014 EKAKJMSS"
 __license__ = "MIT License"
 
 __status__ = "v6"
 
-# imports one per line
+#imports one per line
 import pytest
 from mining import *
 
