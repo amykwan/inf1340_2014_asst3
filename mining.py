@@ -1,6 +1,5 @@
 """
-Program that reads stock data and returns the best and worst monthly average
-stock prices
+Reads stock data and returns the best and worst monthly average stock prices
 """
 
 __author__ = 'Eugene Kang, Amy Kwan, Jessica Mann, Susan Sim'

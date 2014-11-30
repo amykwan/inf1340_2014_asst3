@@ -1,4 +1,7 @@
-""" Docstring """
+"""
+Works with mining.py to visually show best and worst of averaged monthly
+stock prices
+"""
 
 __author__ = 'Eugene Kang, Amy Kwan, Jessica Mann'
 __email__ = "eugene.yc.kang@gmail.com, amykwan.cma@gmail.com, jessmann74@gmail.com"

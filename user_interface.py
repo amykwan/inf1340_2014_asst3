@@ -1,4 +1,7 @@
-""" Docstring """
+"""
+Module to access and return results from mining.py, visualize.py
+and compare_two_stocks.py
+"""
 
 __author__ = 'Eugene Kang, Amy Kwan, Jessica Mann'
 __email__ = "eugene.yc.kang@gmail.com, amykwan.cma@gmail.com, jessmann74@gmail.com"

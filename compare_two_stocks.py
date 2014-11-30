@@ -1,4 +1,7 @@
-""" Docstring """
+"""
+Works with mining.py to compare the standard deviations of two stock
+companies' averaged monthly stock prices
+"""
 
 __author__ = 'Eugene Kang, Amy Kwan, Jessica Mann'
 __email__ = "eugene.yc.kang@gmail.com, amykwan.cma@gmail.com, jessmann74@gmail.com"
