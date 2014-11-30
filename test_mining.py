@@ -1,12 +1,12 @@
 """ Docstring """
 
 __author__ = 'Eugene Kang, Amy Kwan, Jessica Mann, Susan Sim'
-__email__ = "ses@drsusansim.org"
+__email__ = "eugene.yc.kang@gmail.com, amykwan.cma@gmail.com, jessmann74@gmail.com, ses@drsusansim.org"
 
-__copyright__ = "2014 Susan Sim"
+__copyright__ = "2014 EKAKJMSS"
 __license__ = "MIT License"
 
-__status__ = "v4"
+__status__ = "v5"
 
 # imports one per line
 import pytest
@@ -50,22 +50,13 @@ def test_too_few_months():
     """
     read_stock_data("TOOFEW", "data\TOOFEW.json")
 
-    assert six_best_months() == [('2003/05', 44.67), ('2003/06', 44.82),
-                                 ('2003/07', 44.3), ('2003/08', 44.63),
+    assert six_best_months() == [('2003/06', 44.82), ('2003/05', 44.67),
+                                 ('2003/08', 44.63), ('2003/07', 44.3),
                                  ('', 0.0), ('', 0.0)]
 
-    assert six_worst_months() == [('2003/05', 44.67), ('2003/06', 44.82),
-                                  ('2003/07', 44.3), ('2003/08', 44.63),
+    assert six_worst_months() == [('2003/07', 44.3), ('2003/08', 44.63),
+                                  ('2003/05', 44.67), ('2003/06', 44.82),
                                   ('', 0.0), ('', 0.0)]
-
-    #this is the sort order (I think) it should be returning
-    # assert six_best_months() == [('2003/06', 44.82), ('2003/05', 44.67),
-    #                              ('2003/08', 44.63), ('2003/07', 44.3),
-    #                              ('', 0.0), ('', 0.0)]
-    #
-    # assert six_worst_months() == [('2003/07', 44.3), ('2003/08', 44.63),
-    #                               ('2003/05', 44.67), ('2003/06', 44.82),
-    #                               ('', 0.0), ('', 0.0)]
 
 
 # Best not returning in descending order. Not actually specified in PDF but is
@@ -84,11 +75,6 @@ def test_non_chrono_order():
                                   ('2003/07', 44.30), ('2004/01', 44.45),
                                   ('2003/10', 44.61), ('2003/08', 44.63)]
 
-    #The order it should be returning
-    # assert six_best_months() == [('2003/06', 44.82), ('2003/11', 44.74),
-    #                              ('2004/05', 44.71), ('2003/05', 44.67),
-    #                              ('2004/03', 45.18), ('2004/04', 45.02)]
-
 
 # Best months not returning in descending order; worst months showing duplicate values
 def test_duplicate_values():
@@ -105,14 +91,6 @@ def test_duplicate_values():
     assert six_worst_months() == [('2003/09', 44.15), ('2004/02', 44.28),
                                   ('2003/07', 44.3), ('2003/12', 44.45),
                                   ('2004/01', 44.45), ('2003/10', 44.61)]
-
-    #What it should be returning
-    # assert six_best_months() == [('2003/06', 44.82), ('2003/11', 44.74),
-    #                              ('2004/05', 44.71), ('2003/05', 44.67),
-    #                              ('2004/03', 45.18), ('2004/04', 45.02)]
-    # assert six_worst_months() == [('2003/09', 44.15), ('2004/02', 44.28),
-    #                               ('2003/07', 44.30), ('2004/01', 44.45),
-    #                               ('2003/10', 44.61), ('2003/08', 44.63)]
 
 
 def test_no_file_found():
