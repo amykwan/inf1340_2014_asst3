@@ -10,7 +10,7 @@ __email__ = "eugene.yc.kang@gmail.com, amykwan.cma@gmail.com, " \
 __copyright__ = "2014 EKAKJM"
 __license__ = "MIT License"
 
-__status__ = "v1"
+__status__ = "v2"
 
 #imports one per line
 from mining import clean_stock_lists, read_stock_data, monthly_averages
@@ -49,7 +49,10 @@ def compare_two_stocks(stock_one_name, stock_one_file_name,
     stock_two_std = get_standard_deviation(stock_two)
 
     #compare their standard deviations
-    if stock_one_std > stock_two_std:
+    if stock_one_std == 0 or stock_two_std == 0:
+        return " the standard deviation cannot be calculated " \
+               "(no data available for one of the stocks!"
+    elif stock_one_std > stock_two_std:
         return stock_one_name + " has the highest standard deviation!"
     elif stock_one_std == stock_two_std:
         return stock_one_name + " and " + stock_two_name + \
