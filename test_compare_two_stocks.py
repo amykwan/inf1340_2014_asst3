@@ -22,9 +22,8 @@ def test_comparison():
     Tests the comparison between two stocks.
     """
 
-    assert (compare_two_stocks("GOOG",
-                               "data/GOOG.json", "TSE-SO",
-                               "data/TSE-SO.json"))\
+    assert (compare_two_stocks("GOOG", "data/GOOG.json",
+                               "TSE-SO", "data/TSE-SO.json"))\
         == "GOOG has the highest standard deviation!"
 
 
