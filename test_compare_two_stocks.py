@@ -2,29 +2,31 @@
 Module to test compare_two_stocks.py
 """
 
-__author__ = 'Eugene Kang, Amy Kwan, Jessica Mann, Susan Sim'
+__author__ = 'Eugene Kang, Amy Kwan, Jessica Mann'
 __email__ = "eugene.yc.kang@gmail.com, amykwan.cma@gmail.com, " \
-            "jessmann74@gmail.com, ses@drsusansim.org"
+            "jessmann74@gmail.com"
 
-__copyright__ = "2014 EKAKJMSS"
+__copyright__ = "2014 EKAKJM"
 __license__ = "MIT License"
 
-__status__ = "v6"
+__status__ = "v2"
 
 #imports one per line
 import pytest
 from mining import *
 from compare_two_stocks import *
 
+
 def test_comparison():
     """
     Tests the comparison between two stocks.
     """
 
-    assert (compare_two_stocks("GOOG", "data/GOOG.json",
-                         "TSE-SO", "data/TSE-SO.json")) == "GOOG has the " \
-                                                           "highest standard " \
-                                                           "deviation!"
+    assert (compare_two_stocks("GOOG",
+                               "data/GOOG.json", "TSE-SO",
+                               "data/TSE-SO.json"))\
+        == "GOOG has the highest standard deviation!"
+
 
 def test_missing_stocks():
     """
