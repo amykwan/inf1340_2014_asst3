@@ -14,6 +14,7 @@ __status__ = "v2"
 
 #imports one per line
 from mining import clean_stock_lists, read_stock_data, monthly_averages
+from statistics import *
 
 
 #Compare Two Stocks Function
@@ -39,19 +40,18 @@ def compare_two_stocks(stock_one_name, stock_one_file_name,
     clean_stock_lists()
     #Initialized the average months for each stocks
     read_stock_data(stock_one_name, stock_one_file_name)
-    stock_one = monthly_averages[:]
-    stock_one_std = get_standard_deviation(stock_one)
+    s1_values = [entry[1] for entry in monthly_averages]
+    stock_one_std = stdev(s1_values)
 
-    #clean stock list two
     clean_stock_lists()
     read_stock_data(stock_two_name, stock_two_file_name)
-    stock_two = monthly_averages[:]
-    stock_two_std = get_standard_deviation(stock_two)
+    s2_values = [entry[1] for entry in monthly_averages]
+    stock_two_std = stdev(s2_values)
 
     #compare their standard deviations
     if stock_one_std == 0 or stock_two_std == 0:
-        return " the standard deviation cannot be calculated " \
-               "(no data available for one of the stocks!"
+        return "The standard deviations cannot be compared " \
+               "(no data available for one or both of the stocks!"
     elif stock_one_std > stock_two_std:
         return stock_one_name + " has the highest standard deviation!"
     elif stock_one_std == stock_two_std:
@@ -61,35 +61,7 @@ def compare_two_stocks(stock_one_name, stock_one_file_name,
         return stock_two_name + " has the highest standard deviation!"
 
 
-#Helper Function for finding the standard deviation
-def get_standard_deviation(stock_info):
-    """
-    Takes monthly stock averages and calculates the mean value base
-    to return the standard deviation for the list
-    :param: stock_info: A list of tuples in the format('YYYY/DD', 111.11)
-    where 'YYYY/DD' represents the month for which stocks were averaged
-    and 111.11 represents the averaged stock for that month.
-    :return: Float. Standard deviation for the monthly averages.
-    """
-    standard_deviation = 0.0
-    total = 0.0
-
-    #Finding the mean value base on the average values of all months
-    for item in stock_info:
-        total += item[1]
-    mean = total/len(stock_info)
-
-    deviations = []
-
-    #Find the standard deviations
-    for item in stock_info:
-        deviations.append(item[1] - mean)
-    for deviation in deviations:
-        standard_deviation += deviation**2
-    std_deviation = standard_deviation/len(stock_info)
-
-    return std_deviation
-
 #One example of compare two stocks using available files
 print(compare_two_stocks("GOOG", "data/GOOG.json",
                          "TSE-SO", "data/TSE-SO.json"))
+
