@@ -59,9 +59,3 @@ def compare_two_stocks(stock_one_name, stock_one_file_name,
             " have the same standard deviation!"
     else:
         return stock_two_name + " has the highest standard deviation!"
-
-
-#One example of compare two stocks using available files
-print(compare_two_stocks("GOOG", "data/GOOG.json",
-                         "TSE-SO", "data/TSE-SO.json"))
-
